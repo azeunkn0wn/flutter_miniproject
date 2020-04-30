@@ -31,7 +31,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
       style: optionStyle,
     ),
     Text(
-      'Index 2: xx',
+      'Index 2: 222',
       style: optionStyle,
     ),
   ];
