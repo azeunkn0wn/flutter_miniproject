@@ -1,6 +1,8 @@
 # flutter_miniproject
 Database not yet implemented.
-I'm still working on backend
+I'm still studying for the backend
+
+UI is still ugly, will improve after I get my database working 
 
 Please use these sample accounts: 
 (email-password)
