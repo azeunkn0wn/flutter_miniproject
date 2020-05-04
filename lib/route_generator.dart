@@ -16,7 +16,7 @@ class RouteGenerator {
         );
       case '/dash':
         return MaterialPageRoute(
-          builder: (_) => MyDashBoard(userData: args),
+          builder: (_) => MyDashBoard(myUserData: args),
         );
       case '/profile':
         return MaterialPageRoute(

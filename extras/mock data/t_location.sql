@@ -1,4 +1,5 @@
-
+insert into t_location (geolocation, user_id, location_name, selected) values (1, 1, 1, true);
+insert into t_location (geolocation, user_id, location_name, selected) values (1, 2, 1, true);
 insert into t_location (geolocation, user_id, location_name, selected) values (2, 3, 2, true);
 insert into t_location (geolocation, user_id, location_name, selected) values (6, 4, 6, true);
 insert into t_location (geolocation, user_id, location_name, selected) values (2, 5, 2, true);

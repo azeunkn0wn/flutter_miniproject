@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:login_ui/src/model/userdata.dart';
+import 'package:login_ui/src/model/userDB.dart';
 
 class MyDashBoard extends StatefulWidget {
-  final Map userData;
-
-  MyDashBoard({@required this.userData, Object data});
+  final Map myUserData;
+  MyDashBoard({this.myUserData});
 
   @override
-  _MyDashBoardState createState() => _MyDashBoardState(userData);
+  _MyDashBoardState createState() => _MyDashBoardState(myUserData);
 }
 
 class _MyDashBoardState extends State<MyDashBoard> {
-  final Map userData;
+  final myUserData;
 
-  _MyDashBoardState(this.userData);
+  _MyDashBoardState(this.myUserData);
 
-  // String get getIcon {
-  //   return myIcon;
-  // }
   int _selectedIndex = 0;
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
@@ -54,7 +51,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context)
-                    .pushNamed('/profile', arguments: userData);
+                    .pushNamed('/profile', arguments: myUserData);
               },
               child: Center(
                 child: Container(
@@ -68,7 +65,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
                         width: 3.0,
                         style: BorderStyle.solid),
                     image: DecorationImage(
-                      image: AssetImage(userData['avatar']),
+                      image: AssetImage('assets/login_logo.gif'),
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                     ),
@@ -104,13 +101,13 @@ class _MyDashBoardState extends State<MyDashBoard> {
 
   Widget getBody() {
     if (_selectedIndex == 0) {
-      return ProfileBody(userData);
+      return ProfileBody(myUserData);
     }
     if (_selectedIndex == 1) {
-      return LookUp(userData['id']);
+      return LookUp(myUserData['user_id']);
     }
     if (_selectedIndex == 2) {
-      return SettingsTab();
+      return Text('''SettingsTab()''');
     }
 
     return Text('error');
@@ -118,8 +115,8 @@ class _MyDashBoardState extends State<MyDashBoard> {
 }
 
 class ProfileBody extends StatelessWidget {
-  final Map userData;
-  ProfileBody(this.userData);
+  final myUserData;
+  ProfileBody(this.myUserData);
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +133,7 @@ class ProfileBody extends StatelessWidget {
               decoration: new BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 image: new DecorationImage(
-                  image: AssetImage(userData['avatar']),
+                  image: AssetImage(myUserData['avatar']),
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                 ),
@@ -146,7 +143,7 @@ class ProfileBody extends StatelessWidget {
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 50),
               child: Column(children: <Widget>[
-                Text(userData['username'],
+                Text(myUserData['username'],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 33,
@@ -154,11 +151,11 @@ class ProfileBody extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Icon(Icons.location_on),
-                    Text(userData['location']),
+                    Text(myUserData['location_name']),
                   ],
                 ),
                 SizedBox(height: 35),
-                Text(userData['description'], style: TextStyle(fontSize: 15)),
+                Text(myUserData['description'], style: TextStyle(fontSize: 15)),
               ], crossAxisAlignment: CrossAxisAlignment.start),
             ),
           ],
@@ -169,47 +166,96 @@ class ProfileBody extends StatelessWidget {
 }
 
 class LookUp extends StatelessWidget {
-  final int userID;
+  final int myUserID;
+  LookUp(this.myUserID);
 
-  LookUp(this.userID);
+  Future<List<People>> byCategory(myUserID,
+      {location, category, username}) async {
+    List<People> peopleList = List<People>();
 
-  List<People> peopleList(userID, {location}) {
-    List<People> result = List<People>();
-    for (var i in UserData.getPeople(location: location)) {
-      if (i['id'] != userID) {
-        result.add(
-          People(i['id'], i['username'], i['avatar'], i['location']),
-        );
-      }
+    final results = await DataBase().search(
+      myUserID,
+      location: location,
+      category: category,
+      username: username,
+    );
+    for (var i in results) {
+      peopleList.add(
+        People(
+            id: i[0],
+            username: i[1],
+            firstname: i[2],
+            avatar: i[3],
+            contact: i[4],
+            location: i[5],
+            description: i[6]),
+      );
     }
 
-    return result;
+    print(peopleList);
+    return peopleList;
   }
+
+// List<People> peopleList(userID, {location}) {
+
+//   List<People> result = List<People>();
+//   for (var i in UserData.getPeople(location: location)) {
+//     if (i['id'] != userID) {
+//       result.add(
+//         People(i['id'], i['username'], i['avatar'], i['location']),
+//       );
+//     }
+//   }
+
+//   return result;
+// }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Center(
-          child: Wrap(
-            direction: Axis.horizontal,
-            runSpacing: 20,
-            spacing: 20,
-            children: peopleList(userID, location: null),
-          ),
+    return FutureBuilder(
+        future: byCategory(
+          myUserID,
+          location: '1',
+          category: null,
+          username: null,
         ),
-      ),
-    );
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    runSpacing: 20,
+                    spacing: 20,
+                    children: snapshot.data,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
   }
 }
 
 class People extends StatelessWidget {
-  final String _username;
-  final String _avatar;
-  final String _location;
-  final int _id;
+  final int id;
+  final String username;
+  final String firstname;
+  final String avatar;
+  final String contact;
+  final String location;
+  final String description;
 
-  People(this._id, this._username, this._avatar, this._location);
+  People({
+    this.id,
+    this.username,
+    this.firstname,
+    this.avatar,
+    this.contact,
+    this.location,
+    this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -226,8 +272,8 @@ class People extends StatelessWidget {
       child: Material(
         child: InkWell(
           onTap: () {
-            Navigator.of(context)
-                .pushNamed('/profile', arguments: UserData(_id).userData);
+            Navigator.of(context).pushNamed('/profile',
+                arguments: null); //UserData(_id).userData);
           },
           child: Column(
             children: <Widget>[
@@ -239,18 +285,18 @@ class People extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   image: DecorationImage(
-                    image: AssetImage(_avatar),
+                    image: NetworkImage(avatar),
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
               Text(
-                _username,
+                username,
                 style: TextStyle(
                   fontSize: 20,
                 ),
               ),
-              Text(_location),
+              Text(location),
             ],
           ),
         ),
@@ -263,7 +309,6 @@ class SettingsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       child: Row(
         children: <Widget>[
           Text('Location: '),

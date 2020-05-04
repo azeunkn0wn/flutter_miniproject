@@ -1,16 +1,17 @@
-# login_ui
+# My First Flutter App
 
-A new Flutter project.
+The app that I work on while learning full stack mobile/web development from scratch with flutter.
 
-## Getting Started
+## Under Construction
 
-This project is a starting point for a Flutter application.
+Progress: 70%
 
-A few resources to get you started if this is your first Flutter project:
+Currently working on back end.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### ToDo
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Finish the completely functional app by tomorrow
+* Beautify widget layouts
+* learn animations
+* learn angel/aqueduct
+* learn how to make a proper README.md

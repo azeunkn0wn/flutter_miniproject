@@ -14,9 +14,7 @@ class UserData {
       'location': 'iloilo',
       'avatar': 'assets/avatar/mim.png',
       'achievements': [
-        '3rd place at the Texting Competition',
-        '5th place at the Competition of Looking at the Cell Phone the Longest while Laying Down',
-        '2nd place at the Ramen Noodle Eating Competition',
+        '3rd place at the Texting Competition\n5th place at the Competition of Looking at the Cell Phone the Longest while Laying Down\n2nd place at the Ramen Noodle Eating Competition'
       ],
       'description':
           "My name is ‘MiM’\n\nI got the nickname ‘Mobile Girl’ since I love the cell phone.\nA lot of people worry that I am too addicted to the cell phone.\n\nBut I am not addicted at all!\n\nI like other things besides the cell phone.\n\nWalking the dog (app)\nMaking a spaghetti (app)\nDrawing (app)\nPlaying the piano (app)\nSwimming (app)\n\nHmmmm...\n",

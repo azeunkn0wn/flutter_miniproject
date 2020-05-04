@@ -1,31 +1,31 @@
 CREATE DATABASE miniproj;
-    
- 
+USE DATABASE miniproj;
 
 CREATE TABLE t_accounts
 (
-    account_id BIGSERIAL NOT NULL PRIMARY KEY,
-    user_id bigint,
+    user_id BIGSERIAL NOT NULL PRIMARY KEY,
     username character varying(50),
     email character varying(50),
     password character varying(50),    
     CONSTRAINT unique_email UNIQUE (email),
     CONSTRAINT unique_username UNIQUE (username),
-    CONSTRAINT "account_user_FK" FOREIGN KEY (user_id)
-        REFERENCES public.t_user (user_id) MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
+    
 )
 
 
-CREATE TABLE t_user
+CREATE TABLE t_userdata
 (
-    user_id BIGSERIAL NOT NULL PRIMARY KEY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    user_id bigint,
     first_name character varying(50),
     last_name character varying(50),
-    avatar character varying(50),
-    description character varying(200),
+    avatar character varying(200),
+    description text,
     contact character varying(50),
+    CONSTRAINT "account_user_FK" FOREIGN KEY (user_id)
+        REFERENCES public.t_accounts (user_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
     
 )
 
@@ -43,7 +43,7 @@ CREATE TABLE t_user_category
     category_id bigint NOT NULL,
     user_id bigint NOT NULL,
     CONSTRAINT "user_category_FK" FOREIGN KEY (user_id)
-        REFERENCES t_user (user_id) MATCH SIMPLE
+        REFERENCES t_accounts (user_id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     CONSTRAINT "category_FK" FOREIGN KEY (category_id)
@@ -52,11 +52,6 @@ CREATE TABLE t_user_category
         ON DELETE CASCADE
 )
     
-
-
-
-
-
 
 
 
@@ -73,9 +68,9 @@ CREATE TABLE t_account_role
 (
 	id bigint NOT NULL PRIMARY KEY DEFAULT nextval('t_location_id_seq'::regclass),
     role_id smallint NOT NULL DEFAULT 1,
-    account_id bigint NOT NULL,
-    CONSTRAINT "account_role_FK" FOREIGN KEY (account_id)
-        REFERENCES public.t_accounts (account_id) MATCH SIMPLE
+    user_id bigint NOT NULL,
+    CONSTRAINT "account_role_FK" FOREIGN KEY (user_id)
+        REFERENCES public.t_accounts (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT "role_description_FK" FOREIGN KEY (role_id)
@@ -112,7 +107,7 @@ CREATE TABLE public.t_location
     selected boolean NOT NULL DEFAULT false,
     CONSTRAINT t_location_pkey PRIMARY KEY (id),
     CONSTRAINT user_locations FOREIGN KEY (user_id)
-        REFERENCES public.t_user (user_id) MATCH SIMPLE
+        REFERENCES public.t_accounts (user_id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
         NOT VALID

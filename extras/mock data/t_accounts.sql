@@ -1,3 +1,5 @@
+insert into t_accounts (username, email, password) values ('azeunkn0wn', 'azeunkn0wn@gmail.com', '12345678');
+insert into t_accounts (username, email, password) values ('mim', 'mim@funnyeve.com', 'mim');
 insert into t_accounts (username, email, password) values ('sscorey0', 'abuggs0@homestead.com', 'fHMK9BbtVmnz');
 insert into t_accounts (username, email, password) values ('akobelt1', 'blonsdale1@ustream.tv', 'lG2jcXSX4P');
 insert into t_accounts (username, email, password) values ('lking2', 'mseywood2@house.gov', 'qerN84Or');

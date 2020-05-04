@@ -1,4 +1,8 @@
-
+insert into t_user_category (category_id, user_id) values (1, 1);
+insert into t_user_category (category_id, user_id) values (2, 1);
+insert into t_user_category (category_id, user_id) values (3, 1);
+insert into t_user_category (category_id, user_id) values (1, 2);
+insert into t_user_category (category_id, user_id) values (3, 2);
 insert into t_user_category (category_id, user_id) values (3, 3);
 insert into t_user_category (category_id, user_id) values (2, 4);
 insert into t_user_category (category_id, user_id) values (3, 5);

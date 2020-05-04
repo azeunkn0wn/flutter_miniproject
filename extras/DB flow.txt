@@ -14,13 +14,13 @@ CREATE NEW ACCOUNT:
     INSERT INTO t_user(first_name, last_name, avatar, description, contact)	VALUES ('Mim', NULL, NULL, NULL, NULL);
     
 - update t_accounts (add user_id):    
-        //get the user_id and account_id, then
+        //get the user_id then
     UPDATE t_accounts SET user_id = 2 WHERE account_id = 2;
 
 
 
 
-LOOK UP SETTINGS:
+LOOK UP SETUP:
     
 - set your location
         //get the user_id, then
@@ -37,49 +37,59 @@ LOOK UP SETTINGS:
 USAGE
 
 LOGIN:
-    SELECT account_id FROM t_accounts WHERE (username = 'input' OR email = 'input') AND password = 'input_password';
+    SELECT user_id FROM t_accounts WHERE (username = 'input' OR email = 'input') AND password = 'input_password';
 
 Search...
-by category:
+by category AND/OR location:
     SELECT
-        t_user.user_id,
-        t_user_category.category_id,
-        t_accounts.username
-    FROM
-        t_user
+        t_accounts.user_id,
+        t_accounts.username,
+        t_user_category.category_id
         
-    INNER JOIN t_user_category ON t_user.user_id = t_user_category.user_id
-    INNER JOIN t_accounts ON t_user.user_id = t_accounts.user_id
-    INNER JOIN t_location ON t_user.user_id = t_location.user_id
-    WHERE t_user_category.category_id = 1;
+    FROM
+        t_accounts
+        
+    INNER JOIN t_user_category ON t_accounts.user_id = t_user_category.user_id
+    INNER JOIN t_location ON t_accounts.user_id = t_location.user_id
+	
+    WHERE (t_user_category.category_id = (CASE WHEN @category IS NOT NULL THEN @category ELSE category_id END))
+	AND (t_location.location_name = (CASE WHEN @location IS NOT NULL THEN @location ELSE location_name END));
+    
     
 by username or email:
     SELECT
-        t_user.user_id,
-        t_user_category.category_id,
-        t_accounts.username
-    FROM
-        t_user
+        t_accounts.user_id,
+        t_accounts.username,
+        t_user_category.category_id
         
-    INNER JOIN t_user_category ON t_user.user_id = t_user_category.user_id
-    INNER JOIN t_accounts ON t_user.user_id = t_accounts.user_id
-    INNER JOIN t_location ON t_user.user_id = t_location.user_id
+    FROM
+        t_accounts
+        
+    INNER JOIN t_user_category ON t_accounts.user_id = t_user_category.user_id
+    INNER JOIN t_location ON t_accounts.user_id = t_location.user_id
+    INNER JOIN t_userdata ON t_accounts.user_id = t_userdata.user_id
     WHERE t_accounts.username = 'input' OR t_accounts.email = 'input';
     
-by location:    
+    
+
+
+Get userData for profile view:
+input: @userID
+
     SELECT
-        t_user.user_id,
-        t_user_category.category_id,
-        t_accounts.username
-    FROM
-        t_user
+        t_accounts.username,
+        t_accounts.email,
+        t_userdata.first_name,
+        t_userdata.last_name,
+        t_userdata.avatar,
+        t_userdata.description,
+        t_userdata.contact
+    FROM 
+        t_accounts
+    LEFT JOIN t_userdata ON t_accounts.user_id = t_userdata.user_id
+    WHERE t_accounts.user_id = @user_id;
         
-    INNER JOIN t_user_category ON t_user.user_id = t_user_category.user_id
-    INNER JOIN t_accounts ON t_user.user_id = t_accounts.user_id
-    INNER JOIN t_location ON t_user.user_id = t_location.user_id
-    WHERE t_location.location_name = '6';
-    
-    
+
     
         
     

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:login_ui/src/model/userdata.dart';
+import 'package:login_ui/src/model/userDB.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,81 +11,61 @@ class _LoginPageState extends State<LoginPage> {
 
   String message = ' ';
   var imageGif = 'assets/login_logo.gif';
-  final emailFieldController = TextEditingController();
-  final passwordFieldController = TextEditingController();
-  final loginData = [
-    {
-      'id': 0,
-      'email': 'azeunkn0wn@gmail.com',
-      'password': '12345678',
-    },
-    {
-      'id': 1,
-      'email': 'email1@gmail.com',
-      'password': 'pass1',
-    },
-    {
-      'id': 2,
-      'email': 'email2@gmail.com',
-      'password': 'pass2',
-    },
-    {
-      'id': 3,
-      'email': 'email3@gmail.com',
-      'password': 'pass3',
-    },
-    {
-      'id': 4,
-      'email': 'email4@gmail.com',
-      'password': 'pass4',
-    },
-  ];
-  int userID;
+  final _emailFieldController = TextEditingController();
+  final _passwordFieldController = TextEditingController();
+  int myUserID;
 
-  Map getUserData() {
-    return UserData(userID).userData;
+  @override
+  void initState() {
+    _emailFieldController.addListener(() {
+      setState(() {
+        imageGif = 'assets/login_logo.gif';
+        message = ' ';
+        _passwordFieldController.text = null;
+      });
+    });
+    super.initState();
   }
 
-  void _goLogin() {
-    final String _email = emailFieldController.text.replaceAll(' ', '');
-    final String _password = passwordFieldController.text.replaceAll(' ', '');
+  void _doLogin() async {
+    final String _email = _emailFieldController.text.replaceAll(' ', '').trim();
+    final String _password = _passwordFieldController.text;
 
-    for (var i = 0; i < loginData.length; i++) {
-      if (loginData[i]['email'] == _email) {
-        if (loginData[i]['password'] == _password) {
-          userID = loginData[i]['id'];
-          print('Success!');
-          setState(() {
-            imageGif = 'assets/success.gif';
-            message = 'Success!';
-          });
-          
-          Map userData = new UserData(userID).userData;
-          Future.delayed(Duration(seconds: 3), () {Navigator.of(context).pushNamed('/dash', arguments: userData);},
-          );
-        } else {
-          setState(() {
-            imageGif = 'assets/wrong.gif';
-            message = 'Wrong Password!';
-          });
-        }
-        break;
-      } else {
+    final result = await DataBase().login(_email, _password);
+
+    if (result[0] == 0) {
+      myUserID = result[1];
+      print('Success!');
+      setState(() {
+        imageGif = 'assets/success.gif';
+        message = 'Success!';
+        _passwordFieldController.text = null;
+      });
+
+      DataBase().getUserData(myUserID).then((myUserData) {
+        Navigator.of(context).pushNamed('/dash', arguments: myUserData);
+      });
+    } else {
+      if (result[0] == 1) {
+        setState(() {
+          imageGif = 'assets/wrong.gif';
+          message = 'Wrong credentials. Try again!';
+          _passwordFieldController.text = null;
+        });
+      } else if (result[0] == 2) {
         setState(() {
           imageGif = 'assets/not_exist.gif';
-          message = 'Does not exist!';
+          message = 'Cannot connect to database';
+          _passwordFieldController.text = null;
         });
       }
     }
-
-    print(_email + ' ' + _password + ' ' + userID.toString());
-    print(message);
   }
 
   @override
   Widget build(BuildContext context) {
     final emailField = TextField(
-      controller: emailFieldController,
+      controller: _emailFieldController,
       style: style,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -98,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final passwordField = TextField(
-      controller: passwordFieldController,
+      controller: _passwordFieldController,
       obscureText: true,
       style: style,
       decoration: InputDecoration(
@@ -117,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: _goLogin,
+        onPressed: _doLogin,
         child: Text("Login",
             textAlign: TextAlign.center,
             style: style.copyWith(
