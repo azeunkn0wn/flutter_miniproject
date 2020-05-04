@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:login_ui/scr/model/userdata.dart';
+import 'dart:async';
+import 'package:login_ui/src/model/userdata.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -59,16 +60,10 @@ class _LoginPageState extends State<LoginPage> {
             imageGif = 'assets/success.gif';
             message = 'Success!';
           });
-
-          // var data = getUserData();
-          // print(data);
-          // final String myUsername = data['username'];
-          // final String myLocation = data['location'];
-          // final String myDescription = data['description'];
-          // final String myIcon = data['avatar'];
           
           Map userData = new UserData(userID).userData;
-          Navigator.of(context).pushNamed('/dash', arguments: userData);
+          Future.delayed(Duration(seconds: 3), () {Navigator.of(context).pushNamed('/dash', arguments: userData);},
+          );
         } else {
           setState(() {
             imageGif = 'assets/wrong.gif';

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:login_ui/route_generator.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  
+  runApp(MyApp());
 
+}
 
 class MyApp extends StatelessWidget {
   @override

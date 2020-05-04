@@ -6,18 +6,10 @@ import 'package:login_ui/screen/home/profile/profile.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Getting arguments passed in while calling Navigator.pushedNamed
     final args = settings.arguments;
 
     switch (settings.name) {
-      case '/':
-        if (args is int) {
-          return MaterialPageRoute(
-            builder: (_) => Home(userID: args),
-          );
-        }
-        return _errorRoute();
-
+      
       case '/login':
         return MaterialPageRoute(
           builder: (_) => LoginPage(),

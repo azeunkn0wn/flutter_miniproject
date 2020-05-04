@@ -1,0 +1,88 @@
+Initialize account:
+CREATE NEW ACCOUNT:
+
+- insert into t_accounts (user_id = null):   
+    INSERT INTO t_accounts(username, email, password) VALUES ('mim', 'mim@funnyeve.com', 'mim');
+    
+- add roles (with user_id, default is 1 [user]):
+        //get the account_id, then
+    INSERT INTO t_account_role(account_id, role_id) VALUES (1,2);
+    
+    
+
+- insert into t_user:
+    INSERT INTO t_user(first_name, last_name, avatar, description, contact)	VALUES ('Mim', NULL, NULL, NULL, NULL);
+    
+- update t_accounts (add user_id):    
+        //get the user_id and account_id, then
+    UPDATE t_accounts SET user_id = 2 WHERE account_id = 2;
+
+
+
+
+LOOK UP SETTINGS:
+    
+- set your location
+        //get the user_id, then
+    INSERT INTO t_location(geolocation, user_id, location_name) VALUES ('?', 2, '?');
+    
+- set your category
+        //get the user_id, then
+    INSERT INTO t_user_category(category_id, user_id) VALUES (2, 2);
+
+
+
+
+
+USAGE
+
+LOGIN:
+    SELECT account_id FROM t_accounts WHERE (username = 'input' OR email = 'input') AND password = 'input_password';
+
+Search...
+by category:
+    SELECT
+        t_user.user_id,
+        t_user_category.category_id,
+        t_accounts.username
+    FROM
+        t_user
+        
+    INNER JOIN t_user_category ON t_user.user_id = t_user_category.user_id
+    INNER JOIN t_accounts ON t_user.user_id = t_accounts.user_id
+    INNER JOIN t_location ON t_user.user_id = t_location.user_id
+    WHERE t_user_category.category_id = 1;
+    
+by username or email:
+    SELECT
+        t_user.user_id,
+        t_user_category.category_id,
+        t_accounts.username
+    FROM
+        t_user
+        
+    INNER JOIN t_user_category ON t_user.user_id = t_user_category.user_id
+    INNER JOIN t_accounts ON t_user.user_id = t_accounts.user_id
+    INNER JOIN t_location ON t_user.user_id = t_location.user_id
+    WHERE t_accounts.username = 'input' OR t_accounts.email = 'input';
+    
+by location:    
+    SELECT
+        t_user.user_id,
+        t_user_category.category_id,
+        t_accounts.username
+    FROM
+        t_user
+        
+    INNER JOIN t_user_category ON t_user.user_id = t_user_category.user_id
+    INNER JOIN t_accounts ON t_user.user_id = t_accounts.user_id
+    INNER JOIN t_location ON t_user.user_id = t_location.user_id
+    WHERE t_location.location_name = '6';
+    
+    
+    
+        
+    
+    
+    
+modify account:

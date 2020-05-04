@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_ui/scr/model/userdata.dart';
+import 'package:login_ui/src/model/userdata.dart';
 
 class MyDashBoard extends StatefulWidget {
   final Map userData;
@@ -23,15 +23,15 @@ class _MyDashBoardState extends State<MyDashBoard> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'My Profile',
       style: optionStyle,
     ),
     Text(
-      'Index 1: 1',
+      'Look up',
       style: optionStyle,
     ),
     Text(
-      'Index 2: 222',
+      'Settings',
       style: optionStyle,
     ),
   ];
@@ -110,7 +110,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
       return LookUp(userData['id']);
     }
     if (_selectedIndex == 2) {
-      return Text('2');
+      return SettingsTab();
     }
 
     return Text('error');
@@ -254,6 +254,21 @@ class People extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SettingsTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+      child: Row(
+        children: <Widget>[
+          Text('Location: '),
+          TextField(),
+        ],
       ),
     );
   }
