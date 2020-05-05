@@ -23,7 +23,7 @@ class MyProfile extends StatelessWidget {
                 decoration: new BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   image: new DecorationImage(
-                    image: AssetImage(userData['avatar']),
+                    image: NetworkImage(userData['avatar']),
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                   ),
@@ -41,19 +41,16 @@ class MyProfile extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       Icon(Icons.location_on),
-                      Text(userData['location']),
+                      Text(userData['location_name']),
                     ],
                   ),
                   SizedBox(height: 35),
                   Text(userData['description'], style: TextStyle(fontSize: 15)),
-                   
+                  SizedBox(
+                    height: 100,
+                  ),
                 ], crossAxisAlignment: CrossAxisAlignment.start),
               ),
-              RaisedButton(
-                  child: Text("Log out"),
-                  onPressed: () => Navigator.of(context)
-                      .pushNamedAndRemoveUntil(
-                          '/login', (Route<dynamic> route) => false)),
             ],
           ),
         ),

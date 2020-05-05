@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
   int myUserID;
-
+  
   @override
   void initState() {
     _emailFieldController.addListener(() {
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       DataBase().getUserData(myUserID).then((myUserData) {
-        Navigator.of(context).pushNamed('/dash', arguments: myUserData);
+        Navigator.of(context).pushNamed('/home', arguments: myUserData);
       });
     } else {
       if (result[0] == 1) {

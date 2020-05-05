@@ -12,6 +12,7 @@ class DataBase {
   // returns [error code, user ID]
   Future login(_username, _password) async {
     try {
+      print('Logging in...');
       await conn.open();
       final result = await conn.query(
         "SELECT user_id FROM t_accounts WHERE (username = @username OR email = @username) AND password = @password",
@@ -21,7 +22,11 @@ class DataBase {
     } on PostgreSQLException catch (err) {
       print('PostgreSQLException: $err');
       return [2, null];
-    } finally {
+    } catch (err) {
+      print(err);
+      return [2, null];
+    }
+    finally {
       conn.close();
     }
   }
@@ -29,6 +34,7 @@ class DataBase {
   // returns Map of data. from tables t_account and t_userdata
   getUserData(_userID) async {
     try {
+      print('Getting UserData in...');
       await conn.open();
       final result = await conn.mappedResultsQuery(
         '''
@@ -69,6 +75,7 @@ class DataBase {
       username = '';
     }
     try {
+      print('Searching...');
       await conn.open();
       final result = await conn.query(
         '''

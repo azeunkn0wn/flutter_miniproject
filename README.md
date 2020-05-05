@@ -10,8 +10,10 @@ Currently working on back end.
 
 ### ToDo
 
-* Finish the completely functional app by tomorrow
+* Optimize navigation
+* Optimize LookUp Widget (remove unnecessary rebuild when search parameters are unchanged)
+* Add sqlite and store logged in users
 * Beautify widget layouts
 * learn animations
-* learn angel/aqueduct
+* learn angel framework?
 * learn how to make a proper README.md
