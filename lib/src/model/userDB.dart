@@ -25,8 +25,7 @@ class DataBase {
     } catch (err) {
       print(err);
       return [2, null];
-    }
-    finally {
+    } finally {
       conn.close();
     }
   }
@@ -67,7 +66,7 @@ class DataBase {
     }
   }
 
-  search(int userID, {String username, String location, int category}) async {
+  Future <List<dynamic>> search(int userID, {String username, String location, int category}) async {
     if (username != null) {
       location = null;
       category = null;
@@ -107,9 +106,20 @@ class DataBase {
       return result;
     } on PostgreSQLException catch (err) {
       print('PostgreSQLException: $err');
-      return {};
+      return [];
     } finally {
       await conn.close();
     }
   }
+
+  //getLocationList() async {
+  //   try {
+  //     await conn.open();
+  //     final list = await conn.query();
+  //   } catch (err) {
+  //     print(err);
+  //   } finally {
+  //     conn.close();
+  //   }
+  // }
 }

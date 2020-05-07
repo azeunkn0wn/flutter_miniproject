@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_ui/src/model/userDB.dart';
+//import 'package:login_ui/src/model/userDB.dart';
 import 'package:login_ui/screen/home/tabs/myprofile.dart';
 import 'package:login_ui/screen/home/tabs/search.dart';
 import 'package:login_ui/screen/home/tabs/settings.dart';
@@ -17,6 +17,9 @@ class _MyDashBoardState extends State<MyDashBoard> {
 
   _MyDashBoardState(this.myUserData);
 
+  void initState() {
+  super.initState();
+  }
   int _selectedIndex = 0;
 
   static const TextStyle optionStyle =
@@ -41,6 +44,8 @@ class _MyDashBoardState extends State<MyDashBoard> {
       _selectedIndex = index;
     });
   }
+
+  List<Widget> screens;
 
   Widget getBody() {
     if (_selectedIndex == 0) {
@@ -93,7 +98,10 @@ class _MyDashBoardState extends State<MyDashBoard> {
           )
         ],
       ),
-      body: getBody(),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [ProfileBody(myUserData), LookUp(myUserData['user_id']), SettingsTab()]
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
