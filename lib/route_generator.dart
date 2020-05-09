@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_ui/screen/login/login.dart';
 import 'package:login_ui/screen/home/home.dart';
-import 'package:login_ui/screen/profile/profile.dart';
+import 'package:login_ui/screen/home/profile/profile.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,7 +15,7 @@ class RouteGenerator {
         );
       case '/home':
         return MaterialPageRoute(
-          builder: (_) => MyDashBoard(myUserData: args),
+          builder: (_) => MyHomePage(myUserID: args),
         );
       case '/profile':
         return MaterialPageRoute(
