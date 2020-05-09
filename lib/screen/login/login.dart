@@ -1,5 +1,6 @@
+
 import 'package:flutter/material.dart';
-import 'package:login_ui/src/model/userDB.dart';
+import 'package:login_ui/src/getdata.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,13 +12,13 @@ class _LoginPageState extends State<LoginPage> {
 
   String message = ' ';
   var imageGif = 'assets/login_logo.gif';
-  final _emailFieldController = TextEditingController();
+  final _userNameFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
   int myUserID;
-  
+
   @override
   void initState() {
-    _emailFieldController.addListener(() {
+    _userNameFieldController.addListener(() {
       setState(() {
         imageGif = 'assets/login_logo.gif';
         message = ' ';
@@ -28,31 +29,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _doLogin() async {
-    final String _email = _emailFieldController.text.replaceAll(' ', '').trim();
+    final String _username =
+        _userNameFieldController.text.replaceAll(' ', '').trim();
     final String _password = _passwordFieldController.text;
 
-    final result = await DataBase().login(_email, _password);
-
-    if (result[0] == 0) {
-      myUserID = result[1];
+    final result = await authenticate(_username, _password, context);
+    if (result['authenticate'] == true) {
+      myUserID = result['userID'];
       print('Success!');
       setState(() {
         imageGif = 'assets/success.gif';
         message = 'Success!';
         _passwordFieldController.text = null;
       });
+        //to Home
+      Navigator.of(context).pushNamed('/home', arguments: myUserID);
 
-      DataBase().getUserData(myUserID).then((myUserData) {
-        Navigator.of(context).pushNamed('/home', arguments: myUserData);
-      });
     } else {
-      if (result[0] == 1) {
+      if (result['authenticate'] == false) {
         setState(() {
           imageGif = 'assets/wrong.gif';
           message = 'Wrong credentials. Try again!';
           _passwordFieldController.text = null;
         });
-      } else if (result[0] == 2) {
+      } else if (result['authenticate'] == null) {
         setState(() {
           imageGif = 'assets/not_exist.gif';
           message = 'Cannot connect to database';
@@ -62,14 +62,16 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    final emailField = TextField(
-      controller: _emailFieldController,
+    final userNameField = TextField(
+      controller: _userNameFieldController,
       style: style,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
+          hintText: "Username/Email Address",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       textInputAction: TextInputAction.next,
@@ -133,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.bottomLeft,
                 ),
                 SizedBox(height: 10.0),
-                emailField,
+                userNameField,
                 SizedBox(height: 25.0),
                 passwordField,
                 SizedBox(

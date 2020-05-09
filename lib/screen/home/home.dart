@@ -1,26 +1,37 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 //import 'package:login_ui/src/model/userDB.dart';
+=======
+import 'package:login_ui/screen/home/tabs/peopletiles.dart';
+>>>>>>> backend
 import 'package:login_ui/screen/home/tabs/myprofile.dart';
 import 'package:login_ui/screen/home/tabs/search.dart';
 import 'package:login_ui/screen/home/tabs/settings.dart';
+import 'package:login_ui/src/getdata.dart';
 
-class MyDashBoard extends StatefulWidget {
-  final Map myUserData;
-  MyDashBoard({this.myUserData});
+class MyHomePage extends StatefulWidget {
+  final int myUserID;
+  MyHomePage({this.myUserID});
 
   @override
-  _MyDashBoardState createState() => _MyDashBoardState(myUserData);
+  _MyHomePageState createState() => _MyHomePageState(myUserID);
 }
 
-class _MyDashBoardState extends State<MyDashBoard> {
-  final myUserData;
+class _MyHomePageState extends State<MyHomePage> {
+  final int myUserID;
 
-  _MyDashBoardState(this.myUserData);
+  _MyHomePageState(this.myUserID);
+  Future<List<People>> peopleList;
 
   void initState() {
   super.initState();
   }
   int _selectedIndex = 0;
+  void initState() {
+    super.initState();
+  }
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -42,6 +53,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      peopleList = fetchPeople(myUserID, location: '1');
     });
   }
 
@@ -49,10 +61,39 @@ class _MyDashBoardState extends State<MyDashBoard> {
 
   Widget getBody() {
     if (_selectedIndex == 0) {
-      return ProfileBody(myUserData);
+      return FutureBuilder(
+        future: profileData(myUserID),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+            );
+          } else {
+            return ProfileBody(snapshot.data);
+          }
+        },
+      );
     }
     if (_selectedIndex == 1) {
-      return LookUp(myUserData['user_id']);
+      return StreamBuilder<Object>(
+          stream: Stream.fromFuture(peopleList),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+              );
+            } else {
+              return LookUp(snapshot.data);
+            }
+          });
     }
     if (_selectedIndex == 2) {
       return SettingsTab();
@@ -72,8 +113,10 @@ class _MyDashBoardState extends State<MyDashBoard> {
             padding: EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .pushNamed('/profile', arguments: myUserData);
+                profileData(myUserID).then((userData) {
+                  Navigator.of(context)
+                      .pushNamed('/profile', arguments: userData);
+                });
               },
               child: Center(
                 child: Container(
