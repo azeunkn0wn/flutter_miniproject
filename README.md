@@ -9,11 +9,11 @@ https://github.com/azeunkn0wn/myapp_backend.git
 ## Changelog
 
 * Added backed. The app is no longer connecting to DB directly.
-* I added some sort of MVC, but I'm not sure if it's a proper one. Will work on it while doing ORM.
 
 
 ### ToDo
 * Use Angel-ORM
+* Add Create New Account screen
 * Optimize navigation and state management
 * Data Persistence with SQLite
 * Improve widget layout design
